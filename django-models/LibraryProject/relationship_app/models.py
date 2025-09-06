@@ -19,3 +19,8 @@ class Library(models.Model):
 class Librarian(models.Model):
     name = models.CharField(max_length=200)
     library = models.OneToOneField(Library)
+    
+    
+class UserProfile(models.Model):
+    user = models.OneToOneField(User)
+    role = models.CharField(max_length=200)
