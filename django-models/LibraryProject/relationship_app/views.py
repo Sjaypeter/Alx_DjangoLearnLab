@@ -9,6 +9,7 @@ from django.contrib.auth import login
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import user_passes_test
 from .passes import is_admin,is_librarian,is_member
+from django.contrib.auth.decorators import permission_required
 # Create your views here.
 
 def book_list(request):
@@ -41,6 +42,16 @@ def member_view(request):
     
     
 
+@permission_required('relationship_app.can_add_book', raise_exception=True)
+def add_book(request, pk):
+    if request.method == 'POST':
+        form = BookForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('book_list')
+        else:
+            form = BookForm()
+            return render(request, 'relationship_app/book_form.html', {'form': form})
     
 
 
