@@ -7,7 +7,7 @@ def book_list(request):
     #A basic function view that lists all books stored in the database
     books = Book.objects.all()
     context = {'list_books':books}
-    return render(request, 'list_books.html',context)
+    return render(request, 'relationship_app/list_books.html',context)
 
 
 class LibraryDetailView(DetailView):
