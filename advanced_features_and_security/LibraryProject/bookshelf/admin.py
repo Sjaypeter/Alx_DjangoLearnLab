@@ -6,10 +6,10 @@ class BookAdmin(admin.ModelAdmin):
     llist_filter = ('title','author','publication_year')
     search_fields = ('title','author')
     
-class ModelAdmin(admin.ModelAdmin):
+class CustomUserAdmin(admin.ModelAdmin):
     pass
     
 
 admin.site.register(Book,BookAdmin)
-admin.site.register(CustomUser,CustomUserManager)
+admin.site.register(CustomUser, CustomUserAdmin)
 
