@@ -11,5 +11,5 @@ class ModelAdmin(admin.ModelAdmin):
     
 
 admin.site.register(Book,BookAdmin)
-admin.site.register(CustomUser,CustomUserManager,ModelAdmin)
+admin.site.register(CustomUser,CustomUserManager)
 
