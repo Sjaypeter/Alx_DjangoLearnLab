@@ -46,18 +46,6 @@ class UserProfile(models.Model):
     
 
 
-class CustomUser(AbstractUser):
-    date_of_birth = models.DateField(null=True,blank=True)
-    profile_photo = models.ImageField(null=True,blank=True)
-    
-    
-class CustomUserManager(BaseBackend):
-    def create_user(self,request,username=None,password=None):
-        if not username:
-            raise ValueError("Username required")
-        
-    def create_superuser(self,request,username=None,password=None):
-        if not username:
-            raise ValueError("Username required")
+
     
     
