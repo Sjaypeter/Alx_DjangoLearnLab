@@ -5,7 +5,7 @@ from django.contrib.auth.backends import BaseUserManager
 from django.contrib.auth.models import Permission
 # Create your models here.
 
-class Book(models.model):
+class Book(models.Model):
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=200)
     publication_year = models.IntegerField()
