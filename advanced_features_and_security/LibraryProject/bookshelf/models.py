@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.backends import BaseBackend
+from django.contrib.auth.backends import BaseUserManager
 # Create your models here.
 
 class Book(models.model):
@@ -17,7 +17,7 @@ class CustomUser(AbstractUser):
     profile_photo = models.ImageField(null=True,blank=True)
     
     
-class CustomUserManager(BaseBackend):
+class CustomUserManager(BaseUserManager):
     def create_user(self,request,username=None,password=None):
         if not username:
             raise ValueError("Username required")
