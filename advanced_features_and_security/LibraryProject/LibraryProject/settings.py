@@ -71,6 +71,10 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True #to include all subdomains in the HSTS pol
 
 SECURE_HSTS_PRELOAD = True #to include all subdomains in the HSTS policy and to allow preloading.
 
+SECURE_PROXY_SSL_HEADER = True
+
+HTTP_X_FORWARDED_PROTO = True
+
 ROOT_URLCONF = 'LibraryProject.urls'
 
 TEMPLATES = [
