@@ -53,15 +53,15 @@ MIDDLEWARE = [
     'relationship_app',
 ]
 
-SECURE_BROWSER_XSS_FILTER = True
+SECURE_BROWSER_XSS_FILTER = True #Set to True to enable the browser’s XSS filtering and help prevent cross-site scripting attacks.
 
-X_FRAME_OPTIONS= True
+X_FRAME_OPTIONS= 'DENY' #to prevent your site from being framed and protect against clickjacking
 
-SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_CONTENT_TYPE_NOSNIFF = True #Set to True to prevent browsers from MIME-sniffing a response away from the declared content-type.
 
-CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True # Set to True to ensure CSRF cookies are only transmitted over HTTPS
 
-SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True #Set to True to ensure session cookies are only transmitted over HTTPS.
 
 ROOT_URLCONF = 'LibraryProject.urls'
 
