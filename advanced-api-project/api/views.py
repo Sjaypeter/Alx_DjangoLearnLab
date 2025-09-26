@@ -13,6 +13,8 @@ class BookListView(generics.ListAPIView):
     search_fields = ['author__name', 'title']
     ordering_fields = ['title', 'author']
     
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    
 class BookUpdateView(generics.UpdateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
@@ -21,6 +23,7 @@ class BookUpdateView(generics.UpdateAPIView):
 class BookDetailView(generics.RetrieveAPIView):
      queryset = Book.objects.all()
      serializer_class = BookSerializer
+     permission_classes = [IsAuthenticatedOrReadOnly]
      
 class BookCreateView(generics.CreateAPIView):
     queryset = Book.objects.all()
