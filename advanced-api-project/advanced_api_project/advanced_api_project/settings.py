@@ -49,6 +49,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'api',
     'rest_framework',
+    'django_filters',
 ]
 
 ROOT_URLCONF = 'advanced_api_project.urls'
