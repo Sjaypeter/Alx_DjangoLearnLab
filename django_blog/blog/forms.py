@@ -24,8 +24,12 @@ class CommentForm(forms.ModelForm):
         fields = ['content']
         
     def clean_content(self):
-        content = self.cleaned_data.get("content")
+        content = self.cleaned_data.get('content')
         
+        if len(content.strip()) < 5:
+            raise forms.ValidationError("Comment must be at least 5 characters long")
+        
+        return content
         
         
 #Develop a CommentForm using Django’s ModelForm to facilitate comment creation and updating.
