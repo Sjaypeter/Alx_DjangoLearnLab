@@ -6,6 +6,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 # Create your views here.
 
 class RegisterView(CreateView):
@@ -15,9 +16,20 @@ class RegisterView(CreateView):
 #This usercreation orm handles user registration and when a user is registered they are redirected to the login page using the successurl
 
 
+
+
 @login_required
 def profile_view(request):
-    return render(request, "blog/templates/profile.html")
+    if request.method == "POST":
+        form = AuthenticationForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your profile has been updated successfully.")
+            return redirect("profile")  # Reloads the profile page
+    else:
+        form = AuthenticationForm()
+
+    return render(request, "blog/templates/profile.html", {"form": form})
 
 
 def login_view(request):
