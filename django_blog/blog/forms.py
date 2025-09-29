@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post
+from .models import Post, Comment
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -15,3 +15,19 @@ class PostForm(forms.ModelForm):
 #Form for the Post model using Django’s ModelForm to handle the creation and updating of blog posts.
 # Ensures the form validates data properly and includes fields for title, content, 
 # and automatically set author based on the logged-in user
+
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']
+        
+    def clean_content(self):
+        content = self.cleaned_data.get("content")
+        
+        
+        
+#Develop a CommentForm using Django’s ModelForm to facilitate comment creation and updating.
+# Ensuring it includes validation rules as necessary.
+    

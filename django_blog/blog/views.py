@@ -10,7 +10,8 @@ from django.contrib import messages
 from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from . models import Post
+from . models import Post, Comment
+from .forms import CommentForm
 from .serializers import PostSerilizer
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 # Create your views here.
@@ -57,21 +58,66 @@ def logout_view(request):
 class ListView(generics.ListAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerilizer
+    model = Post
+    template_name = 'blog/post_list.html'
     
 class DetailView(generics.RetrieveAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerilizer
+    model = Post
+    template_name = 'blog/post_detail.html'
     
+ #Create View requires login   
 class CreateView(generics.CreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerilizer
+    model = Post
+    fields = ['title', 'content']
+    template_name = 'blog/post_create.html'
     
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+    
+#update view requires login and ownership check    
 class UpdateView(generics.UpdateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerilizer
+    fields = ['title', 'content']
+    template_name = 'blog/post_create.html'
     
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+    
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author
     
 class DeleteView(generics.DestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerilizer
     
+    model = Post
+    template_name = 'blog/post_delete.html'
+    success_url = reverse_lazy('post_list')
+    
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author
+    
+@login_required
+def add_comment(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            comment.save()
+            return redirect("post_detail", pk= post.pk)
+    else:
+        form = CommentForm()
+    return render(request, "blog/add_comment.html", {"form": form, "post": post})
