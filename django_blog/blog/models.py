@@ -20,3 +20,11 @@ class Comment(models.Model):
     
     def __str__(self):
         return f"Comment by {self.author} on {self.post}"
+    
+    
+class Tag(models.Model):
+    name = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="Tags")
+    
+# Tag model in your blog app that includes a name field.
+#Establish a many-to-many relationship between Tag and Post models to allow assigning multiple tags to a single post
+#and associating multiple posts with a single tag.

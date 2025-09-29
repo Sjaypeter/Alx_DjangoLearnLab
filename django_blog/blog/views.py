@@ -14,6 +14,7 @@ from . models import Post, Comment
 from .forms import CommentForm
 from .serializers import PostSerilizer
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.db.models import Q
 # Create your views here.
 
 class RegisterView(CreateView):
@@ -144,3 +145,44 @@ class BlogCommentDeleteView(DeleteView, LoginRequiredMixin):
     def test_func(self):
         comment = self.get_object()
         return self.request.user == comment.author
+    
+ 
+ 
+class SearchView(ListView):
+    model = Post
+    template_name = 'blog/search_results.html'
+    context_object_name = 'posts'
+    ordering = ['-published_date']
+    
+    def get_queryset(self):
+        query = self.request.GET.get('q', '')
+        if query:
+            #filter post where title, content or tags match query
+            return Post.objects.filter(
+                Q(title__icontains=query) |
+                Q(content__icontains=query) |
+                Q(tags__name__icontains=query)
+             ).distinct() #distinct avoid duplicate posts
+        return Post.objects.all() #returns all post if no query
+    
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["query"] = self.request.GET.get('q', '') #Pass query to template for display
+        return context
+    
+    
+class PostByTagListView(ListView):
+    model = Post
+    template_name = 'blog/tag_posts.html'
+    context_object_name = 'posts'
+    ordering = ['-published_date']
+    
+    def get_queryset(self):
+        tag_name = self.kwargs['tag_name']
+        return Post.objects.filter(tags__name=tag_name) #filters post by exact tag name
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tag_name'] = self.kwargs['tag_name']
+        return context
