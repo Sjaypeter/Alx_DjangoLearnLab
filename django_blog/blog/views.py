@@ -5,6 +5,7 @@ from django.views.generic import CreateView
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login
 from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 class RegisterView(CreateView):
@@ -12,6 +13,12 @@ class RegisterView(CreateView):
     success_url = reverse_lazy('login')
     template_name = 'blog/templates/register.html'
 #This usercreation orm handles user registration and when a user is registered they are redirected to the login page using the successurl
+
+
+@login_required
+def profile_view(request):
+    return render(request, "blog/templates/profile.html")
+
 
 def login_view(request):
     if request.method == 'POST':
