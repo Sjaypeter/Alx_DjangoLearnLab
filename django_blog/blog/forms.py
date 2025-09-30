@@ -11,6 +11,13 @@ class PostForm(forms.ModelForm):
         if len(title) < 5:
             raise forms.ValidationError("Title must be at least 5 characters long.")
         return title
+    
+    def clean_tags(self):
+        tags = self.cleaned_data.get("tags")
+        
+        if not tags:
+            raise forms.ValidationError("Please add at least one tag")
+        return tags
 
 #Form for the Post model using Django’s ModelForm to handle the creation and updating of blog posts.
 # Ensures the form validates data properly and includes fields for title, content, 
