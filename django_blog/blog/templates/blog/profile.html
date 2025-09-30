@@ -1,26 +1,31 @@
+<!-- blog/templates/blog/profile.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <title>User Profile</title>
-    <link rel="stylesheet" href="{% static 'accounts/css/profile.css' %}">
+    <title>Profile</title>
 </head>
+
 <body>
-    <div class="profile-container">
-        <div class="profile-card">
-            <div class="profile-header">
-                <h2>Welcome, {{ user.username }} 👋</h2>
-            </div>
-            <div class="profile-body">
-                <p><strong>Email:</strong> {{ user.email }}</p>
-                <p><strong>Joined:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
-                <p><strong>Last Login:</strong> {{ user.last_login|date:"F j, Y, g:i a" }}</p>
-            </div>
-            <div class="profile-actions">
-                <a href="{% url 'logout' %}" class="btn logout">Logout</a>
-                <a href="#" class="btn edit">Edit Profile</a>
-            </div>
-        </div>
-    </div>
+    <h2>Your Profile</h2>
+    <p>Username: {{ user.username }}</p>
+    <p>Email: {{ user.email }}</p>
+    <p>Full Name: {{ user.get_full_name }}</p>
+    <p>Bio: {{ profile.bio|default:"No bio set" }}</p>
+    {% if profile.profile_picture %}
+    <p>Profile Picture:</p>
+    <img src="{{ profile.profile_picture.url }}" alt="profile_picture" style="max-width: 100px;">
+    {% else %}
+    <p>No profile picture set</p>
+    {% endif %}
+    <p>
+        <a href="{% url 'profile-updates' %}">Edit Profile</a>
+
+    </p>
+    <p>
+        <a href="{% url 'logout' %}">Logout</a>
+    </p>
+
 </body>
+
 </html>
