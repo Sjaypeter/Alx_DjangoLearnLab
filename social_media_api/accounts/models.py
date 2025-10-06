@@ -1,14 +1,12 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import AbstractUser
 
-class CustomUser(AbstractBaseUser):
+class CustomUser(AbstractUser):
     bio = models.TextField()
-    profile_picture = models.ImageField(upload_to='profile_pics/',blank=True, null=True)
-    followers = models.ManyToManyField('self',symmetrical=False, related_name='following', blank=True)
-    # symmetrical=False means A following B doesn't imply B follows A
-
+    profile_picture = models.ImageField(upload_to='images/')
+    followers = models.ManyToManyField('self', symmetrical=False, related_name="follower", blank= True)
 
     def __str__(self):
-        # prefer full name if available, otherwise username
-        full = self.get_full_name()
-        return full if full else self.username
+        return self.username
+    
+    
