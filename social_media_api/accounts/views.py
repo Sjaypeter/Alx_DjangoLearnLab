@@ -32,13 +32,16 @@ class RegisterView(generics.CreateAPIView):
 
 class LoginView(APIView):
 
-    def post(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        token =  Token.objects.get(key=response.data['token'])
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, _ = Token.objects.get_or_create(user=user)
         return Response({
-            'user': CustomUserSerializer(token.user).data,
+            'user': CustomUserSerializer(user).data,
             'token': token.key
         }, status=status.HTTP_200_OK)
+
     
     def get_object(self):
         return self.request.user
