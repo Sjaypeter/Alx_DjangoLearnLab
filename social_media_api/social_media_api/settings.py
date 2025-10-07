@@ -135,4 +135,12 @@ REST_FRAMEWORK = {
     ],
 }
 
-
+#This enables global pagination (10 items per page) and activates search and ordering filters for all viewsets that support them
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,  # number of results per page
+    'DEFAULT_FILTER_BACKENDS': [
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter',
+    ],
+}

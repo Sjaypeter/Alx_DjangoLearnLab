@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import generics
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, filters
 from rest_framework.permissions import IsAuthenticated
 from . permissions import IsAuthorOrReadOnly
 from . models import Post, Comment
@@ -15,7 +15,12 @@ class PostListCreateAPIView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['title', 'content']  # allow ?search=keyword
+    ordering_fields = ['created_at', 'updated_at']
+    ordering = ['-created_at']  # newest first
 
+    #Automatically sets author to the logged-in user
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
@@ -24,6 +29,9 @@ class PostRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['created_at', 'updated_at']
+    ordering = ['created_at']
 
 
 
@@ -43,7 +51,7 @@ class CommentViewSet(viewsets.ModelViewSet):
               queryset = queryset.filter(post_id=post_id)
               return queryset
           
-
+    #Automatically sets author to the logged-in user
     def perform_create(self, serializer):
         post_id = self.request.data.get('post')
         if not post_id:
