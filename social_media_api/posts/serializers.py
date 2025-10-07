@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 
 user = get_user_model()
 
-class Post(serializers.ModelSerializer):
+class PostSerializer(serializers.ModelSerializer):
 
     author = serializers.StringRelatedField(read_only=True) # shows username instead of ID
 
@@ -28,7 +28,7 @@ class Post(serializers.ModelSerializer):
         return super().create(validated_data)
 
 
-class Comment(serializers.ModelSerializer):
+class CommentSerializer(serializers.ModelSerializer):
     
     author = serializers.StringRelatedField(read_only=True) # shows username instead of ID
     post = serializers.PrimaryKeyRelatedField(read_only = True) # prevents manual post assignment in body

@@ -1,3 +1,51 @@
 from django.shortcuts import render
+from rest_framework import generics
+from rest_framework import viewsets, permissions
+from rest_framework.permissions import IsAuthenticated
+from . permissions import IsAuthorOrReadOnly
+from . models import Post, Comment
+from . serializers import PostSerializer, CommentSerializer
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.exceptions import PermissionDenied
 
 # Create your views here.
+
+class PostListCreateAPIView(generics.ListCreateAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+class PostRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+
+
+class CommentViewSet(viewsets.ModelViewSet):
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
+
+
+    def get_queryset(self):
+          """
+        Optionally filter comments by a specific post (if ?post_id= is passed).
+        """
+          queryset = Comment.objects.all()
+          post_id = self.request.query_params.get('post_id')
+
+          if post_id:
+              queryset = queryset.filter(post_id=post_id)
+              return queryset
+          
+
+    def perform_create(self, serializer):
+        post_id = self.request.data.get('post')
+        if not post_id:
+            raise PermissionDenied("A 'post' ID must be provided to create a comment")
+        serializer.save(author=self.request.user, post_id=post_id)
