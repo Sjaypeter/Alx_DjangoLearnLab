@@ -1,8 +1,13 @@
-from django.urls import path
-from . views import PostListCreateAPIView, PostRetrieveUpdateDestroyAPIView, CommentViewSet
+from django.urls import path,include
+from . views import PostViewSet,CommentViewSet
+from rest_framework.routers import DefaultRouter
+
+
+router = DefaultRouter()
+
+router.register(r'comments', CommentViewSet, basename='comment')
+router.register(r'posts',PostViewSet, basename='posts')
 
 urlpatterns = [
-    path('post/', PostListCreateAPIView.as_view(), name='post-list-create'),
-    path('post/<int:pk>/',PostRetrieveUpdateDestroyAPIView.as_view(), name='post-retrieve-update-delete'),
-    path('comments/', CommentViewSet.as_view(), name='comments')
+    path('', include(router.urls)),
 ]

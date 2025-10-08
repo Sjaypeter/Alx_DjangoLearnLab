@@ -1,6 +1,11 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 # Create your models here.
+
+
+#This ensures that Django always points to my active user model — whether it’s the default one or a custom one
+User = settings.AUTH_USER_MODEL 
+
 
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')

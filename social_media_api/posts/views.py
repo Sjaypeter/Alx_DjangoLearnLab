@@ -10,8 +10,7 @@ from rest_framework.exceptions import PermissionDenied
 
 # Create your views here.
 
-class PostListCreateAPIView(generics.ListCreateAPIView):
-    authentication_classes = [TokenAuthentication]
+class PostViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
     queryset = Post.objects.all()
     serializer_class = PostSerializer
@@ -23,15 +22,6 @@ class PostListCreateAPIView(generics.ListCreateAPIView):
     #Automatically sets author to the logged-in user
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
-
-class PostRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer
-    filter_backends = [filters.OrderingFilter]
-    ordering_fields = ['created_at', 'updated_at']
-    ordering = ['created_at']
 
 
 
