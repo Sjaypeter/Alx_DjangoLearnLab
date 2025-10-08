@@ -51,7 +51,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 class FeedView(generics.ListAPIView):
         serializer_class = PostSerializer
-        permission_classes = [IsAuthenticated]
+        permission_classes = [permissions.IsAuthenticated]
 
         def get_queryset(self): #Instead of returning all posts, it filters only the ones relevant to the logged-in user
             user = self.request.user #Gets the currently authenticated user from the incoming request
