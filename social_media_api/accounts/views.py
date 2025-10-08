@@ -31,7 +31,7 @@ class RegisterView(generics.CreateAPIView):
         }, status=status.HTTP_201_CREATED)
     
 
-class LoginView(APIView):
+class LoginView(ObtainAuthToken):
 
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
@@ -47,6 +47,15 @@ class LoginView(APIView):
     def get_object(self):
         return self.request.user
     
+
+class ProfileView(generics.RetrieveUpdateAPIView):
+    serializer_class = CustomUserSerializer
+    permission_classes = [IsAuthenticated]
+    
+
+    def get_object(self):
+        return self.request.user
+
 
 class FollowUserView(generics.GenericAPIView):
     permission_classes = [ permissions.IsAuthenticated]
@@ -78,3 +87,5 @@ class UnfollowUserView(generics.GenericAPIView):
         else:
             request.user.following.remove(user_to_unfollow)
             return Response({"message": f"You Unfollowed {user_to_unfollow.username}"}, status=status.HTTP_200_OK)
+
+
