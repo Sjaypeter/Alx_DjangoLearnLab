@@ -145,4 +145,4 @@ REST_FRAMEWORK = {
     ],
 }
 
-AUTH_USER_MODEL = 'accounts.CustomUser'
+AUTH_USER_MODEL = 'accounts.CustomUser' #Django replaces the default auth.User with your custom model everywhere in your project.
